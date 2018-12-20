@@ -109,6 +109,10 @@ type TProps = {
    * Callback when word is clicked.
    */
   onWordClick?: (d: Object) => void,
+  /**
+   * Tooltip style
+   */
+  tooltipStyle?: Object,
 };
 
 type TState = {
@@ -142,6 +146,18 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipEnabled: true,
     transitionDuration: 1000,
     width: null,
+    tooltipStyle: {
+      background: '#000',
+      border: '#aaa',
+      borderRadius: 2,
+      color: '#fff',
+      fontFamily: 'arial',
+      fontSize: 12,
+      padding: '4px 8px',
+      pointerEvents: 'none',
+      position: 'fixed',
+      textAlign: 'center',
+    },
   };
 
   state = {
@@ -162,12 +178,14 @@ class WordCloud extends React.Component<TProps, TState> {
 
   render(): React.Element<any> {
     const {tooltipContent, tooltipEnabled, tooltipX, tooltipY} = this.state;
+    const {tooltipStyle} = this.props;
     const tooltip = tooltipEnabled ? (
       <Tooltip
         content={tooltipContent}
         isEnabled={tooltipEnabled}
         x={tooltipX}
         y={tooltipY}
+        style={tooltipStyle}
       />
     ) : null;
     return (
@@ -239,11 +257,10 @@ class WordCloud extends React.Component<TProps, TState> {
     } = props;
     // update svg/vis nodes dimensions
     this._setDimensions(height, width);
-    this._svg
-      .attrs({
-        height: this._height,
-        width: this._width,
-      });
+    this._svg.attrs({
+      height: this._height,
+      width: this._width,
+    });
     this._vis.attr(
       'transform',
       `translate(${this._width / 2}, ${this._height / 2})`,
