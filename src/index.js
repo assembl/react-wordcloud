@@ -104,7 +104,7 @@ type TProps = {
   /**
    * Callback to control the display of words.  Overrides 'wordKey' prop.
    */
-  onSetTooltip?: (d: Object) => string,
+  onSetTooltip?: (d: Object) => React.Node,
   /**
    * Callback when word is clicked.
    */
@@ -116,7 +116,7 @@ type TProps = {
 };
 
 type TState = {
-  tooltipContent: string,
+  tooltipContent: React.Node,
   tooltipEnabled: boolean,
   tooltipX: number,
   tooltipY: number,
@@ -161,7 +161,7 @@ class WordCloud extends React.Component<TProps, TState> {
   };
 
   state = {
-    tooltipContent: '',
+    tooltipContent: <div />,
     tooltipEnabled: false,
     tooltipX: 0,
     tooltipY: 0,
