@@ -81,7 +81,7 @@ var WordCloud = function (_React$Component) {
     }
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = WordCloud.__proto__ || Object.getPrototypeOf(WordCloud)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      tooltipContent: '',
+      tooltipContent: React.createElement('div', null),
       tooltipEnabled: false,
       tooltipX: 0,
       tooltipY: 0
@@ -139,12 +139,14 @@ var WordCloud = function (_React$Component) {
           tooltipEnabled = _state.tooltipEnabled,
           tooltipX = _state.tooltipX,
           tooltipY = _state.tooltipY;
+      var tooltipStyle = this.props.tooltipStyle;
 
       var tooltip = tooltipEnabled ? React.createElement(_tooltip2.default, {
         content: tooltipContent,
         isEnabled: tooltipEnabled,
         x: tooltipX,
-        y: tooltipY
+        y: tooltipY,
+        style: tooltipStyle
       }) : null;
       return React.createElement(
         'div',
@@ -226,7 +228,19 @@ var WordCloud = function (_React$Component) {
       // if min === max, we prefer the upper bound range value
       var d3Scale = _getScale(scale);
       var filteredWords = words.slice(0, maxWords);
-      this._fontScale = (0, _lodash2.default)(filteredWords, wordCountKey).length > 1 ? d3Scale().range([10, 100]) : d3Scale().range([100, 100]);
+      var range = {
+        min: 16,
+        max: 40
+      };
+      if (this._width >= 650) {
+        range.min = 18;
+        range.max = 70;
+      } else {
+        if (this._width >= 550) {
+          range.max = 55;
+        }
+      }
+      this._fontScale = (0, _lodash2.default)(filteredWords, wordCountKey).length > 1 ? d3Scale().range([range.min, range.max]) : d3Scale().range([range.max, range.max]);
       if (filteredWords.length) {
         this._fontScale.domain([d3.min(filteredWords, function (d) {
           return d[wordCountKey];
@@ -254,7 +268,7 @@ var WordCloud = function (_React$Component) {
         });
       }
 
-      this._layout.size([this._width, this._height]).words(filteredWords).padding(1).text(this._setText).font(fontFamily).fontSize(function (d) {
+      this._layout.size([this._width, this._height]).words(filteredWords).padding(4).text(this._setText).font(fontFamily).fontSize(function (d) {
         return _this3._fontScale(d[wordCountKey]);
       }).spiral(spiral).on('end', function (words) {
         return _this3._draw(words, props);
@@ -339,7 +353,19 @@ WordCloud.defaultProps = {
   spiral: 'rectangular',
   tooltipEnabled: true,
   transitionDuration: 1000,
-  width: null
+  width: null,
+  tooltipStyle: {
+    background: '#000',
+    border: '#aaa',
+    borderRadius: 2,
+    color: '#fff',
+    fontFamily: 'arial',
+    fontSize: 12,
+    padding: '4px 8px',
+    pointerEvents: 'none',
+    position: 'fixed',
+    textAlign: 'center'
+  }
 };
 
 

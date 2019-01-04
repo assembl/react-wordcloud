@@ -270,10 +270,22 @@ class WordCloud extends React.Component<TProps, TState> {
     // if min === max, we prefer the upper bound range value
     const d3Scale = _getScale(scale);
     const filteredWords = words.slice(0, maxWords);
+    let range = {
+      min: 16,
+      max: 40,
+    };
+    if (this._width >= 650) {
+      range.min = 18;
+      range.max = 70;
+    } else {
+      if (this._width >= 550) {
+        range.max = 55;
+      }
+    }
     this._fontScale =
       uniqBy(filteredWords, wordCountKey).length > 1
-        ? d3Scale().range([10, 100])
-        : d3Scale().range([100, 100]);
+        ? d3Scale().range([range.min, range.max])
+        : d3Scale().range([range.max, range.max]);
     if (filteredWords.length) {
       this._fontScale.domain([
         d3.min(filteredWords, (d: Object): number => d[wordCountKey]),
@@ -301,7 +313,7 @@ class WordCloud extends React.Component<TProps, TState> {
     this._layout
       .size([this._width, this._height])
       .words(filteredWords)
-      .padding(1)
+      .padding(4)
       .text(this._setText)
       .font(fontFamily)
       .fontSize((d: Object): number => this._fontScale(d[wordCountKey]))
