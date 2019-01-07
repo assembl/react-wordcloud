@@ -14,6 +14,7 @@ import {event as currentEvent} from 'd3-selection';
 import * as d3SelectionMulti from 'd3-selection-multi';
 import invariant from 'invariant';
 import uniqBy from 'lodash.uniqby';
+import tinycolor from 'tinycolor2';
 
 import Tooltip from './tooltip';
 
@@ -387,7 +388,8 @@ class WordCloud extends React.Component<TProps, TState> {
       : _chooseRandom(colors || DEFAULT_COLORS);
   };
 
-  _onMouseOver = (d: Object): void => {
+  _onMouseOver = (d: Object, i: any, nodes: any): void => {
+    //tooltip
     const {tooltipEnabled, wordKey, wordCountKey, onSetTooltip} = this.props;
     const tooltipContent = onSetTooltip
       ? onSetTooltip(d)
@@ -400,14 +402,20 @@ class WordCloud extends React.Component<TProps, TState> {
         tooltipY: currentEvent.pageY - 28,
       });
     }
+    //hover effect
+    const color = tinycolor(this._colorScale(d, i));
+    d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
   };
 
-  _onMouseOut = (d: Object): void => {
+  _onMouseOut = (d: Object, i: any, nodes: any): void => {
+    //tooltip
     if (this.props.tooltipEnabled) {
       this.setState({
         tooltipEnabled: false,
       });
     }
+    //hover effect
+    d3.select(nodes[i]).attr('fill', this._colorScale(d, i));
   };
 
   _validateProps(): void {

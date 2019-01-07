@@ -45,6 +45,10 @@ var _lodash = require('lodash.uniqby');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _tinycolor = require('tinycolor2');
+
+var _tinycolor2 = _interopRequireDefault(_tinycolor);
+
 var _tooltip = require('./tooltip');
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
@@ -93,7 +97,8 @@ var WordCloud = function (_React$Component) {
           colors = _this$props.colors;
 
       return colorScale ? colorScale(d, i) : _chooseRandom(colors || DEFAULT_COLORS);
-    }, _this._onMouseOver = function (d) {
+    }, _this._onMouseOver = function (d, i, nodes) {
+      //tooltip
       var _this$props2 = _this.props,
           tooltipEnabled = _this$props2.tooltipEnabled,
           wordKey = _this$props2.wordKey,
@@ -109,12 +114,18 @@ var WordCloud = function (_React$Component) {
           tooltipY: _d3Selection.event.pageY - 28
         });
       }
-    }, _this._onMouseOut = function (d) {
+      //hover effect
+      var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
+      d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+    }, _this._onMouseOut = function (d, i, nodes) {
+      //tooltip
       if (_this.props.tooltipEnabled) {
         _this.setState({
           tooltipEnabled: false
         });
       }
+      //hover effect
+      d3.select(nodes[i]).attr('fill', _this._colorScale(d, i));
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
