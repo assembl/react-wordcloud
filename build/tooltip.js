@@ -79,11 +79,12 @@ var Tooltip = function (_React$Component) {
           x = _state.x,
           y = _state.y;
 
-      var mergedStyle = _extends({}, style, {
+      var mergedStyle = _extends({
         left: x,
         top: y,
+        position: 'fixed',
         display: isEnabled ? '' : 'none'
-      });
+      }, style);
       return React.createElement(
         'div',
         {
@@ -113,7 +114,6 @@ Tooltip.defaultProps = {
     fontSize: 12,
     padding: '4px 8px',
     pointerEvents: 'none',
-    position: 'fixed',
     textAlign: 'center'
   }
 };

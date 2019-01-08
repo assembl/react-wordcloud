@@ -35,7 +35,6 @@ class Tooltip extends React.Component<TProps, TState> {
       fontSize: 12,
       padding: '4px 8px',
       pointerEvents: 'none',
-      position: 'fixed',
       textAlign: 'center',
     },
   };
@@ -56,10 +55,11 @@ class Tooltip extends React.Component<TProps, TState> {
     const {content, isEnabled, style} = this.props;
     const {x, y} = this.state;
     const mergedStyle = {
-      ...style,
       left: x,
       top: y,
+      position: 'fixed',
       display: isEnabled ? '' : 'none',
+      ...style,
     };
     return (
       <div
