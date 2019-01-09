@@ -111,6 +111,14 @@ type TProps = {
    */
   onWordClick?: (d: Object) => void,
   /**
+   * Callback when mouse begins hovering word.
+   */
+  onMouseOverWord?: (d: Object) => void,
+  /**
+   * Callback when mouse ends hovering word.
+   */
+  onMouseOutWord?: (d: Object) => void,
+  /**
    * Tooltip style
    */
   tooltipStyle?: Object,
@@ -147,6 +155,15 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipEnabled: true,
     transitionDuration: 1000,
     width: null,
+    onWordClick: (d: Object) => {
+      return;
+    },
+    onMouseOverWord: (d: Object) => {
+      return;
+    },
+    onMouseOutWord: (d: Object) => {
+      return;
+    },
     tooltipStyle: {
       background: '#000',
       border: '#aaa',
@@ -390,7 +407,13 @@ class WordCloud extends React.Component<TProps, TState> {
 
   _onMouseOver = (d: Object, i: any, nodes: any): void => {
     //tooltip
-    const {tooltipEnabled, wordKey, wordCountKey, onSetTooltip} = this.props;
+    const {
+      tooltipEnabled,
+      wordKey,
+      wordCountKey,
+      onSetTooltip,
+      onMouseOverWord,
+    } = this.props;
     const tooltipContent = onSetTooltip
       ? onSetTooltip(d)
       : `${d[wordKey]} (${d[wordCountKey]})`;
@@ -405,9 +428,11 @@ class WordCloud extends React.Component<TProps, TState> {
     //hover effect
     const color = tinycolor(this._colorScale(d, i));
     d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+    if (onMouseOverWord) onMouseOverWord(d);
   };
 
   _onMouseOut = (d: Object, i: any, nodes: any): void => {
+    const {onMouseOutWord} = this.props;
     //tooltip
     if (this.props.tooltipEnabled) {
       this.setState({
@@ -416,6 +441,7 @@ class WordCloud extends React.Component<TProps, TState> {
     }
     //hover effect
     d3.select(nodes[i]).attr('fill', this._colorScale(d, i));
+    if (onMouseOutWord) onMouseOutWord(d);
   };
 
   _validateProps(): void {

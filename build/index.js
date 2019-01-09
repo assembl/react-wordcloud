@@ -103,7 +103,8 @@ var WordCloud = function (_React$Component) {
           tooltipEnabled = _this$props2.tooltipEnabled,
           wordKey = _this$props2.wordKey,
           wordCountKey = _this$props2.wordCountKey,
-          onSetTooltip = _this$props2.onSetTooltip;
+          onSetTooltip = _this$props2.onSetTooltip,
+          onMouseOverWord = _this$props2.onMouseOverWord;
 
       var tooltipContent = onSetTooltip ? onSetTooltip(d) : d[wordKey] + ' (' + d[wordCountKey] + ')';
       if (tooltipEnabled) {
@@ -117,8 +118,11 @@ var WordCloud = function (_React$Component) {
       //hover effect
       var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
       d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+      if (onMouseOverWord) onMouseOverWord(d);
     }, _this._onMouseOut = function (d, i, nodes) {
+      var onMouseOutWord = _this.props.onMouseOutWord;
       //tooltip
+
       if (_this.props.tooltipEnabled) {
         _this.setState({
           tooltipEnabled: false
@@ -126,6 +130,7 @@ var WordCloud = function (_React$Component) {
       }
       //hover effect
       d3.select(nodes[i]).attr('fill', _this._colorScale(d, i));
+      if (onMouseOutWord) onMouseOutWord(d);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
@@ -365,6 +370,15 @@ WordCloud.defaultProps = {
   tooltipEnabled: true,
   transitionDuration: 1000,
   width: null,
+  onWordClick: function onWordClick(d) {
+    return;
+  },
+  onMouseOverWord: function onMouseOverWord(d) {
+    return;
+  },
+  onMouseOutWord: function onMouseOutWord(d) {
+    return;
+  },
   tooltipStyle: {
     background: '#000',
     border: '#aaa',
