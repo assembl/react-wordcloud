@@ -88,7 +88,8 @@ var WordCloud = function (_React$Component) {
       tooltipContent: React.createElement('div', null),
       tooltipEnabled: false,
       tooltipX: 0,
-      tooltipY: 0
+      tooltipY: 0,
+      selectedWord: {}
     }, _this._setText = function (d) {
       return d[_this.props.wordKey];
     }, _this._colorScale = function (d, i) {
@@ -97,6 +98,22 @@ var WordCloud = function (_React$Component) {
           colors = _this$props.colors;
 
       return colorScale ? colorScale(d, i) : _chooseRandom(colors || DEFAULT_COLORS);
+    }, _this._onWordClick = function (d, i, nodes) {
+      //callback
+      var onWordClick = _this.props.onWordClick;
+
+      if (onWordClick) onWordClick(d);
+      //click effect
+      var selectedWord = _this.state.selectedWord;
+
+      var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
+      if (d === selectedWord) {
+        _this.setState({ selectedWord: {} });
+        d3.select(nodes[i]).attr('fill', color.toRgbString());
+      } else {
+        _this.setState({ selectedWord: d });
+        d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+      }
     }, _this._onMouseOver = function (d, i, nodes) {
       //tooltip
       var _this$props2 = _this.props,
@@ -129,7 +146,11 @@ var WordCloud = function (_React$Component) {
         });
       }
       //hover effect
-      d3.select(nodes[i]).attr('fill', _this._colorScale(d, i));
+      var selectedWord = _this.state.selectedWord;
+
+      if (d !== selectedWord) {
+        d3.select(nodes[i]).attr('fill', _this._colorScale(d, i));
+      }
       if (onMouseOutWord) onMouseOutWord(d);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -295,13 +316,12 @@ var WordCloud = function (_React$Component) {
     value: function _draw(words, props) {
       // d3.layout.cloud adds 'x', 'y', 'rotate', 'size' accessors to 'd' object
       var fontFamily = props.fontFamily,
-          transitionDuration = props.transitionDuration,
-          onWordClick = props.onWordClick;
+          transitionDuration = props.transitionDuration;
 
       this._words = this._vis.selectAll('text').data(words);
 
       // enter transition
-      this._words.enter().append('text').on('click', onWordClick).on('mouseover', this._onMouseOver).on('mouseout', this._onMouseOut).attrs({
+      this._words.enter().append('text').on('click', this._onWordClick).on('mouseover', this._onMouseOver).on('mouseout', this._onMouseOut).attrs({
         cursor: onWordClick ? 'pointer' : 'default',
         fill: this._colorScale,
         'font-family': fontFamily,
