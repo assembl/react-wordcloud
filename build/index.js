@@ -316,7 +316,8 @@ var WordCloud = function (_React$Component) {
     value: function _draw(words, props) {
       // d3.layout.cloud adds 'x', 'y', 'rotate', 'size' accessors to 'd' object
       var fontFamily = props.fontFamily,
-          transitionDuration = props.transitionDuration;
+          transitionDuration = props.transitionDuration,
+          onWordClick = props.onWordClick;
 
       this._words = this._vis.selectAll('text').data(words);
 

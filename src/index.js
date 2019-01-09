@@ -344,7 +344,7 @@ class WordCloud extends React.Component<TProps, TState> {
 
   _draw(words: Array<Object>, props: TProps): void {
     // d3.layout.cloud adds 'x', 'y', 'rotate', 'size' accessors to 'd' object
-    const {fontFamily, transitionDuration } = props;
+    const {fontFamily, transitionDuration, onWordClick} = props;
     this._words = this._vis.selectAll('text').data(words);
 
     // enter transition
