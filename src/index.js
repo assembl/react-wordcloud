@@ -184,7 +184,10 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipEnabled: false,
     tooltipX: 0,
     tooltipY: 0,
-    selectedWord: {}
+    selectedWord: {
+      i: -1,
+      ref: -1,
+    },
   };
 
   componentDidMount(): void {
@@ -407,23 +410,26 @@ class WordCloud extends React.Component<TProps, TState> {
       : _chooseRandom(colors || DEFAULT_COLORS);
   };
 
-  _onWordClick = (d: Object, i: any, nodes: any): void => {
+  _onWordClick = (d: Object, i: number, nodes: any): void => {
     //callback
     const {onWordClick} = this.props;
     if (onWordClick) onWordClick(d);
     //click effect
     const {selectedWord} = this.state;
     const color = tinycolor(this._colorScale(d, i));
-    if (d === selectedWord) {
-      this.setState({selectedWord: {}});
+    if (i === selectedWord.i) {
+      this.setState({selectedWord: {i: -1, ref: -1}});
       d3.select(nodes[i]).attr('fill', color.toRgbString());
     } else {
-      this.setState({selectedWord: d});
+      if (selectedWord.ref !== -1) {
+        d3.select(selectedWord.ref).attr('fill', color.toRgbString());
+      }
+      this.setState({selectedWord: {i, ref: nodes[i]}});
       d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
     }
   };
 
-  _onMouseOver = (d: Object, i: any, nodes: any): void => {
+  _onMouseOver = (d: Object, i: number, nodes: any): void => {
     //tooltip
     const {
       tooltipEnabled,
@@ -449,7 +455,7 @@ class WordCloud extends React.Component<TProps, TState> {
     if (onMouseOverWord) onMouseOverWord(d);
   };
 
-  _onMouseOut = (d: Object, i: any, nodes: any): void => {
+  _onMouseOut = (d: Object, i: number, nodes: any): void => {
     const {onMouseOutWord} = this.props;
     //tooltip
     if (this.props.tooltipEnabled) {
@@ -459,7 +465,7 @@ class WordCloud extends React.Component<TProps, TState> {
     }
     //hover effect
     const {selectedWord} = this.state;
-    if (d !== selectedWord) {
+    if (i !== selectedWord.i) {
       d3.select(nodes[i]).attr('fill', this._colorScale(d, i));
     }
     if (onMouseOutWord) onMouseOutWord(d);

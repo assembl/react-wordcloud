@@ -89,7 +89,10 @@ var WordCloud = function (_React$Component) {
       tooltipEnabled: false,
       tooltipX: 0,
       tooltipY: 0,
-      selectedWord: {}
+      selectedWord: {
+        i: -1,
+        ref: -1
+      }
     }, _this._setText = function (d) {
       return d[_this.props.wordKey];
     }, _this._colorScale = function (d, i) {
@@ -107,11 +110,14 @@ var WordCloud = function (_React$Component) {
       var selectedWord = _this.state.selectedWord;
 
       var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
-      if (d === selectedWord) {
-        _this.setState({ selectedWord: {} });
+      if (i === selectedWord.i) {
+        _this.setState({ selectedWord: { i: -1, ref: -1 } });
         d3.select(nodes[i]).attr('fill', color.toRgbString());
       } else {
-        _this.setState({ selectedWord: d });
+        if (selectedWord.ref !== -1) {
+          d3.select(selectedWord.ref).attr('fill', color.toRgbString());
+        }
+        _this.setState({ selectedWord: { i: i, ref: nodes[i] } });
         d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
       }
     }, _this._onMouseOver = function (d, i, nodes) {
@@ -148,7 +154,7 @@ var WordCloud = function (_React$Component) {
       //hover effect
       var selectedWord = _this.state.selectedWord;
 
-      if (d !== selectedWord) {
+      if (i !== selectedWord.i) {
         d3.select(nodes[i]).attr('fill', _this._colorScale(d, i));
       }
       if (onMouseOutWord) onMouseOutWord(d);
