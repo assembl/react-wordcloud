@@ -185,6 +185,7 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipX: 0,
     tooltipY: 0,
     selectedWord: {
+      d: {},
       i: -1,
       ref: -1,
     },
@@ -422,9 +423,12 @@ class WordCloud extends React.Component<TProps, TState> {
       d3.select(nodes[i]).attr('fill', color.toRgbString());
     } else {
       if (selectedWord.ref !== -1) {
-        d3.select(selectedWord.ref).attr('fill', color.toRgbString());
+        const oldColor = tinycolor(
+          this._colorScale(selectedWord.d, selectedWord.i),
+        );
+        d3.select(selectedWord.ref).attr('fill', oldColor.toRgbString());
       }
-      this.setState({selectedWord: {i, ref: nodes[i]}});
+      this.setState({selectedWord: {d, i, ref: nodes[i]}});
       d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
     }
   };

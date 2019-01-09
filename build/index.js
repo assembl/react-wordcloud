@@ -90,6 +90,7 @@ var WordCloud = function (_React$Component) {
       tooltipX: 0,
       tooltipY: 0,
       selectedWord: {
+        d: {},
         i: -1,
         ref: -1
       }
@@ -115,9 +116,10 @@ var WordCloud = function (_React$Component) {
         d3.select(nodes[i]).attr('fill', color.toRgbString());
       } else {
         if (selectedWord.ref !== -1) {
-          d3.select(selectedWord.ref).attr('fill', color.toRgbString());
+          var oldColor = (0, _tinycolor2.default)(_this._colorScale(selectedWord.d, selectedWord.i));
+          d3.select(selectedWord.ref).attr('fill', oldColor.toRgbString());
         }
-        _this.setState({ selectedWord: { i: i, ref: nodes[i] } });
+        _this.setState({ selectedWord: { d: d, i: i, ref: nodes[i] } });
         d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
       }
     }, _this._onMouseOver = function (d, i, nodes) {
