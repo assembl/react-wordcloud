@@ -111,6 +111,14 @@ type TProps = {
    */
   onWordClick?: (d: Object) => void,
   /**
+   * Callback when mouse begins hovering word.
+   */
+  onMouseOverWord?: (d: Object) => void,
+  /**
+   * Callback when mouse ends hovering word.
+   */
+  onMouseOutWord?: (d: Object) => void,
+  /**
    * Tooltip style
    */
   tooltipStyle?: Object,
@@ -121,6 +129,7 @@ type TState = {
   tooltipEnabled: boolean,
   tooltipX: number,
   tooltipY: number,
+  selectedWord: Object,
 };
 
 class WordCloud extends React.Component<TProps, TState> {
@@ -147,6 +156,15 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipEnabled: true,
     transitionDuration: 1000,
     width: null,
+    onWordClick: (d: Object) => {
+      return;
+    },
+    onMouseOverWord: (d: Object) => {
+      return;
+    },
+    onMouseOutWord: (d: Object) => {
+      return;
+    },
     tooltipStyle: {
       background: '#000',
       border: '#aaa',
@@ -166,6 +184,11 @@ class WordCloud extends React.Component<TProps, TState> {
     tooltipEnabled: false,
     tooltipX: 0,
     tooltipY: 0,
+    selectedWord: {
+      d: {},
+      i: -1,
+      ref: -1,
+    },
   };
 
   componentDidMount(): void {
@@ -332,7 +355,7 @@ class WordCloud extends React.Component<TProps, TState> {
     this._words
       .enter()
       .append('text')
-      .on('click', onWordClick)
+      .on('click', this._onWordClick)
       .on('mouseover', this._onMouseOver)
       .on('mouseout', this._onMouseOut)
       .attrs({
@@ -388,9 +411,37 @@ class WordCloud extends React.Component<TProps, TState> {
       : _chooseRandom(colors || DEFAULT_COLORS);
   };
 
-  _onMouseOver = (d: Object, i: any, nodes: any): void => {
+  _onWordClick = (d: Object, i: number, nodes: any): void => {
+    //callback
+    const {onWordClick} = this.props;
+    if (onWordClick) onWordClick(d);
+    //click effect
+    const {selectedWord} = this.state;
+    const color = tinycolor(this._colorScale(d, i));
+    if (i === selectedWord.i) {
+      this.setState({selectedWord: {i: -1, ref: -1}});
+      d3.select(nodes[i]).attr('fill', color.toRgbString());
+    } else {
+      if (selectedWord.ref !== -1) {
+        const oldColor = tinycolor(
+          this._colorScale(selectedWord.d, selectedWord.i),
+        );
+        d3.select(selectedWord.ref).attr('fill', oldColor.toRgbString());
+      }
+      this.setState({selectedWord: {d, i, ref: nodes[i]}});
+      d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+    }
+  };
+
+  _onMouseOver = (d: Object, i: number, nodes: any): void => {
     //tooltip
-    const {tooltipEnabled, wordKey, wordCountKey, onSetTooltip} = this.props;
+    const {
+      tooltipEnabled,
+      wordKey,
+      wordCountKey,
+      onSetTooltip,
+      onMouseOverWord,
+    } = this.props;
     const tooltipContent = onSetTooltip
       ? onSetTooltip(d)
       : `${d[wordKey]} (${d[wordCountKey]})`;
@@ -405,9 +456,11 @@ class WordCloud extends React.Component<TProps, TState> {
     //hover effect
     const color = tinycolor(this._colorScale(d, i));
     d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+    if (onMouseOverWord) onMouseOverWord(d);
   };
 
-  _onMouseOut = (d: Object, i: any, nodes: any): void => {
+  _onMouseOut = (d: Object, i: number, nodes: any): void => {
+    const {onMouseOutWord} = this.props;
     //tooltip
     if (this.props.tooltipEnabled) {
       this.setState({
@@ -415,7 +468,11 @@ class WordCloud extends React.Component<TProps, TState> {
       });
     }
     //hover effect
-    d3.select(nodes[i]).attr('fill', this._colorScale(d, i));
+    const {selectedWord} = this.state;
+    if (i !== selectedWord.i) {
+      d3.select(nodes[i]).attr('fill', this._colorScale(d, i));
+    }
+    if (onMouseOutWord) onMouseOutWord(d);
   };
 
   _validateProps(): void {
