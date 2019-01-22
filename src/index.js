@@ -102,6 +102,11 @@ type TProps = {
    * Callback to render color based on 'data' or 'i'.  Overrides 'color' prop.
    */
   colorScale?: (d: Object, i: number) => string,
+    /**
+   * Callback to render color based on 'data' or 'i'.  Overrides 'color' prop.
+   */
+  colorScaleHover?: (d: Object, i: number) => string,
+  /**
   /**
    * Callback to control the display of words.  Overrides 'wordKey' prop.
    */
@@ -413,11 +418,11 @@ class WordCloud extends React.Component<TProps, TState> {
 
   _onWordClick = (d: Object, i: number, nodes: any): void => {
     //callback
-    const {onWordClick} = this.props;
+    const {colorScaleHover, onWordClick} = this.props;
     if (onWordClick) onWordClick(d);
     //click effect
     const {selectedWord} = this.state;
-    const color = tinycolor(this._colorScale(d, i));
+    const color = colorScaleHover ? colorScaleHover(d, i) : tinycolor(this._colorScale(d, i));
     if (i === selectedWord.i) {
       this.setState({selectedWord: {i: -1, ref: -1}});
       d3.select(nodes[i]).attr('fill', color.toRgbString());

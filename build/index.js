@@ -104,13 +104,15 @@ var WordCloud = function (_React$Component) {
       return colorScale ? colorScale(d, i) : _chooseRandom(colors || DEFAULT_COLORS);
     }, _this._onWordClick = function (d, i, nodes) {
       //callback
-      var onWordClick = _this.props.onWordClick;
+      var _this$props2 = _this.props,
+          colorScaleHover = _this$props2.colorScaleHover,
+          onWordClick = _this$props2.onWordClick;
 
       if (onWordClick) onWordClick(d);
       //click effect
       var selectedWord = _this.state.selectedWord;
 
-      var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
+      var color = colorScaleHover ? colorScaleHover(d, i) : (0, _tinycolor2.default)(_this._colorScale(d, i));
       if (i === selectedWord.i) {
         _this.setState({ selectedWord: { i: -1, ref: -1 } });
         d3.select(nodes[i]).attr('fill', color.toRgbString());
@@ -124,12 +126,12 @@ var WordCloud = function (_React$Component) {
       }
     }, _this._onMouseOver = function (d, i, nodes) {
       //tooltip
-      var _this$props2 = _this.props,
-          tooltipEnabled = _this$props2.tooltipEnabled,
-          wordKey = _this$props2.wordKey,
-          wordCountKey = _this$props2.wordCountKey,
-          onSetTooltip = _this$props2.onSetTooltip,
-          onMouseOverWord = _this$props2.onMouseOverWord;
+      var _this$props3 = _this.props,
+          tooltipEnabled = _this$props3.tooltipEnabled,
+          wordKey = _this$props3.wordKey,
+          wordCountKey = _this$props3.wordCountKey,
+          onSetTooltip = _this$props3.onSetTooltip,
+          onMouseOverWord = _this$props3.onMouseOverWord;
 
       var tooltipContent = onSetTooltip ? onSetTooltip(d) : d[wordKey] + ' (' + d[wordCountKey] + ')';
       if (tooltipEnabled) {
