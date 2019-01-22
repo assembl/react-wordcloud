@@ -105,14 +105,15 @@ var WordCloud = function (_React$Component) {
     }, _this._onWordClick = function (d, i, nodes) {
       //callback
       var _this$props2 = _this.props,
-          colorScaleHover = _this$props2.colorScaleHover,
+          colorScaleActive = _this$props2.colorScaleActive,
           onWordClick = _this$props2.onWordClick;
 
       if (onWordClick) onWordClick(d);
       //click effect
       var selectedWord = _this.state.selectedWord;
 
-      var color = colorScaleHover ? colorScaleHover(d, i) : (0, _tinycolor2.default)(_this._colorScale(d, i));
+      var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
+      var colorActive = colorScaleActive ? (0, _tinycolor2.default)(colorScaleActive(d, i)) : (0, _tinycolor2.default)(_this._colorScale(d, i)).complement();
       if (i === selectedWord.i) {
         _this.setState({ selectedWord: { i: -1, ref: -1 } });
         d3.select(nodes[i]).attr('fill', color.toRgbString());
@@ -122,11 +123,12 @@ var WordCloud = function (_React$Component) {
           d3.select(selectedWord.ref).attr('fill', oldColor.toRgbString());
         }
         _this.setState({ selectedWord: { d: d, i: i, ref: nodes[i] } });
-        d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+        d3.select(nodes[i]).attr('fill', colorActive.toRgbString());
       }
     }, _this._onMouseOver = function (d, i, nodes) {
       //tooltip
       var _this$props3 = _this.props,
+          colorScaleActive = _this$props3.colorScaleActive,
           tooltipEnabled = _this$props3.tooltipEnabled,
           wordKey = _this$props3.wordKey,
           wordCountKey = _this$props3.wordCountKey,
@@ -143,8 +145,8 @@ var WordCloud = function (_React$Component) {
         });
       }
       //hover effect
-      var color = (0, _tinycolor2.default)(_this._colorScale(d, i));
-      d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+      var colorActive = colorScaleActive ? (0, _tinycolor2.default)(colorScaleActive(d, i)) : (0, _tinycolor2.default)(_this._colorScale(d, i)).complement();
+      d3.select(nodes[i]).attr('fill', colorActive.toRgbString());
       if (onMouseOverWord) onMouseOverWord(d);
     }, _this._onMouseOut = function (d, i, nodes) {
       var onMouseOutWord = _this.props.onMouseOutWord;

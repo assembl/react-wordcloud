@@ -102,11 +102,10 @@ type TProps = {
    * Callback to render color based on 'data' or 'i'.  Overrides 'color' prop.
    */
   colorScale?: (d: Object, i: number) => string,
-    /**
-   * Callback to render color based on 'data' or 'i'.  Overrides 'color' prop.
-   */
-  colorScaleHover?: (d: Object, i: number) => string,
   /**
+   * Callback to render color based on 'data' or 'i' when a word is active.
+   */
+  colorScaleActive?: (d: Object, i: number) => string,
   /**
    * Callback to control the display of words.  Overrides 'wordKey' prop.
    */
@@ -418,11 +417,14 @@ class WordCloud extends React.Component<TProps, TState> {
 
   _onWordClick = (d: Object, i: number, nodes: any): void => {
     //callback
-    const {colorScaleHover, onWordClick} = this.props;
+    const {colorScaleActive, onWordClick} = this.props;
     if (onWordClick) onWordClick(d);
     //click effect
     const {selectedWord} = this.state;
-    const color = colorScaleHover ? colorScaleHover(d, i) : tinycolor(this._colorScale(d, i));
+    const color = tinycolor(this._colorScale(d, i));
+    const colorActive = colorScaleActive
+      ? tinycolor(colorScaleActive(d, i))
+      : tinycolor(this._colorScale(d, i)).complement();
     if (i === selectedWord.i) {
       this.setState({selectedWord: {i: -1, ref: -1}});
       d3.select(nodes[i]).attr('fill', color.toRgbString());
@@ -434,13 +436,14 @@ class WordCloud extends React.Component<TProps, TState> {
         d3.select(selectedWord.ref).attr('fill', oldColor.toRgbString());
       }
       this.setState({selectedWord: {d, i, ref: nodes[i]}});
-      d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+      d3.select(nodes[i]).attr('fill', colorActive.toRgbString());
     }
   };
 
   _onMouseOver = (d: Object, i: number, nodes: any): void => {
     //tooltip
     const {
+      colorScaleActive,
       tooltipEnabled,
       wordKey,
       wordCountKey,
@@ -459,8 +462,10 @@ class WordCloud extends React.Component<TProps, TState> {
       });
     }
     //hover effect
-    const color = tinycolor(this._colorScale(d, i));
-    d3.select(nodes[i]).attr('fill', color.complement().toRgbString());
+    const colorActive = colorScaleActive
+      ? tinycolor(colorScaleActive(d, i))
+      : tinycolor(this._colorScale(d, i)).complement();
+    d3.select(nodes[i]).attr('fill', colorActive.toRgbString());
     if (onMouseOverWord) onMouseOverWord(d);
   };
 
