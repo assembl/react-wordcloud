@@ -276,7 +276,7 @@ var WordCloud = function (_React$Component) {
       // update fontScale by rescaling to min/max values of data
       // if min === max, we prefer the upper bound range value
       var d3Scale = _getScale(scale);
-      var filteredWords = words.slice(0, maxWords - 1);
+      var filteredWords = words.slice(0, maxWords);
       var range = {
         min: 16,
         max: 40
