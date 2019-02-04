@@ -297,7 +297,7 @@ class WordCloud extends React.Component<TProps, TState> {
     // update fontScale by rescaling to min/max values of data
     // if min === max, we prefer the upper bound range value
     const d3Scale = _getScale(scale);
-    const filteredWords = words.slice(0, maxWords-1);
+    const filteredWords = words.slice(0, maxWords - 1);
     let range = {
       min: 16,
       max: 40,
