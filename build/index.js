@@ -202,7 +202,8 @@ var WordCloud = function (_React$Component) {
         {
           ref: function ref(container) {
             _this2._container = container;
-          } },
+          }
+        },
         React.createElement('div', {
           ref: function ref(chart) {
             _this2._chart = chart;
@@ -340,21 +341,14 @@ var WordCloud = function (_React$Component) {
         'font-family': fontFamily,
         'text-anchor': 'middle',
         transform: 'translate(0, 0) rotate(0)'
-      }).transition().duration(transitionDuration).attrs({
-        'font-size': function fontSize(d) {
-          return d.size + 'px';
-        },
-        transform: this._transformText
-      }).text(this._setText);
+      }).transition().duration(transitionDuration).attr('font-size', function (d) {
+        return d.size + 'px';
+      }).attr('transform', this._transformText).text(this._setText);
 
       // update transition
-      this._words.transition().duration(transitionDuration).attrs({
-        'font-family': fontFamily,
-        'font-size': function fontSize(d) {
-          return d.size + 'px';
-        },
-        transform: this._transformText
-      }).text(this._setText);
+      this._words.transition().duration(transitionDuration).attr('font-family', fontFamily).attr('font-size', function (d) {
+        return d.size + 'px';
+      }).attr('transform', this._transformText).text(this._setText);
 
       // exit transition
       this._words.exit().transition().duration(transitionDuration).attr('fill-opacity', 0).remove();
