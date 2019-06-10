@@ -19,8 +19,8 @@
     "d3-selection-multi": "^1.0.1",
     "invariant": "^2.2.2",
     "lodash.uniqby": "^4.7.0",
-    "react": "~16.3.1",
-    "react-dom": "~16.3.1",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
