@@ -15,7 +15,6 @@ import * as d3SelectionMulti from 'd3-selection-multi';
 import invariant from 'invariant';
 import uniqBy from 'lodash.uniqby';
 import tinycolor from 'tinycolor2';
-import 'd3-transition';
 
 import Tooltip from './tooltip';
 
@@ -197,7 +196,6 @@ class WordCloud extends React.Component<TProps, TState> {
   };
 
   componentDidMount(): void {
-    console.log('POUET')
     this._validateProps();
     this._init(this.props);
   }
@@ -207,7 +205,6 @@ class WordCloud extends React.Component<TProps, TState> {
   }
 
   render(): React.Element<any> {
-    console.log('POUETPOUET')
     const { tooltipContent, tooltipEnabled, tooltipX, tooltipY } = this.state;
     const { tooltipStyle } = this.props;
     const tooltip = tooltipEnabled ? (
