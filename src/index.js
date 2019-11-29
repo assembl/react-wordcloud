@@ -10,6 +10,7 @@ import * as d3Array from 'd3-array';
 import cloud from 'd3-cloud';
 import * as d3Scale from 'd3-scale';
 import * as d3Selection from 'd3-selection';
+import transition from 'd3-transition';
 import { event as currentEvent } from 'd3-selection';
 import * as d3SelectionMulti from 'd3-selection-multi';
 import invariant from 'invariant';
