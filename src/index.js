@@ -207,6 +207,7 @@ class WordCloud extends React.Component<TProps, TState> {
   }
 
   render(): React.Element<any> {
+    console.log('POUETPOUET')
     const { tooltipContent, tooltipEnabled, tooltipX, tooltipY } = this.state;
     const { tooltipStyle } = this.props;
     const tooltip = tooltipEnabled ? (
@@ -371,8 +372,8 @@ class WordCloud extends React.Component<TProps, TState> {
         'text-anchor': 'middle',
         transform: 'translate(0, 0) rotate(0)'
       })
-      .transition()
-      .duration(transitionDuration)
+      // .transition()
+      // .duration(transitionDuration)
       .attr('font-size', d => `${d.size}px`)
       .attr('transform', this._transformText)
       .text(this._setText);
